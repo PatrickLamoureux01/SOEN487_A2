@@ -14,6 +14,13 @@ public class Artist {
         this.bio = null;
     }
 
+    public Artist(String fname, String lname, String nick, String bio) {
+        this.nickname = nick;
+        this.fName = fname;
+        this.lName = lname;
+        this.bio = bio;
+    }
+
     public String getNickname() {
         return nickname;
     }

@@ -7,10 +7,10 @@ public class Album implements Serializable {
     private String isrc;
     private String title;
     private String description;
-    private int year;
+    private String year;
     private Artist artist;
 
-    public Album(String isrc, String title, String description, int year, Artist artist) {
+    public Album(String isrc, String title, String description, String year, Artist artist) {
         this.isrc = isrc;
         this.title = title;
         this.description = description;
@@ -23,7 +23,7 @@ public class Album implements Serializable {
         this.isrc = null;
         this.title = null;
         this.description = null;
-        this.year = 0;
+        this.year = null;
         this.artist = null;
 
     }
@@ -52,11 +52,11 @@ public class Album implements Serializable {
         this.description = description;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

@@ -15,6 +15,6 @@ public interface AlbumsInterface {
     void deleteAlbumCover();
     void getAlbumCover();
 
-    void getChangeLogs();
+    void getChangeLogs(String from, String to, String type);
     void clearLogs();
 }

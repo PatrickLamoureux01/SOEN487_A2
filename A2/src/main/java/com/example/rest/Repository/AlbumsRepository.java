@@ -4,7 +4,9 @@ import com.example.rest.Core.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumsRepository implements AlbumsInterface {
@@ -79,13 +81,65 @@ public class AlbumsRepository implements AlbumsInterface {
     @Override
     public Album getAlbumInfo(String isrc) {
 
+        try {
+            String select_album_sql = "SELECT * FROM albums WHERE isrc = ?";
+            PreparedStatement select_stmt = conn.prepareStatement(select_album_sql);
+            select_stmt.setString(1, isrc);
+            ResultSet rs = select_stmt.executeQuery();
+
+            if (!rs.next()) {
+                return null;
+            } else {
+                do {
+                    String title = rs.getString("title");
+                    String desc = rs.getString("description");
+                    String year = rs.getString("releaseYear");
+                    String fname = rs.getString("artistF");
+                    String lname = rs.getString("artistL");
+                    String nick = rs.getString("artistNick");
+                    String bio = rs.getString("artistBio");
+                    return new Album(isrc,title,desc,year,new Artist(fname,lname,nick,bio));
+                } while (rs.next());
+            }
+        }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
         return null;
     }
 
     @Override
-    public List<Album> getAlbumsList() {
+    public ArrayList<Album> getAlbumsList() {
 
+        ArrayList<Album> albums = new ArrayList<Album>();
+
+        try {
+            String select_album_sql = "SELECT * FROM albums";
+            PreparedStatement select_stmt = conn.prepareStatement(select_album_sql);
+            ResultSet rs2 = select_stmt.executeQuery();
+
+            if (!rs2.next()) {
+                return null;
+            } else {
+                do {
+                    String isrc = rs2.getString("isrc");
+                    String title = rs2.getString("title");
+                    String desc = rs2.getString("description");
+                    String year = rs2.getString("releaseYear");
+                    String fname = rs2.getString("artistF");
+                    String lname = rs2.getString("artistL");
+                    String nick = rs2.getString("artistNick");
+                    String bio = rs2.getString("artistBio");
+                    albums.add(new Album(isrc,title,desc,year,new Artist(fname,lname,nick,bio)));
+                } while (rs2.next());
+                return albums;
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
         return null;
+
     }
 
     @Override
@@ -104,7 +158,7 @@ public class AlbumsRepository implements AlbumsInterface {
     }
 
     @Override
-    public void getChangeLogs() {
+    public void getChangeLogs(String from, String to, String type) {
 
     }
 

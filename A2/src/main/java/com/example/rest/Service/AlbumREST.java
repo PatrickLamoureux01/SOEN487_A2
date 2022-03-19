@@ -2,10 +2,13 @@ package com.example.rest.Service;
 
 import com.example.rest.Core.*;
 import com.example.rest.Repository.AlbumsRepository;
+import org.apache.http.HttpException;
+
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import java.util.ArrayList;
+
 
 
 @Path("albums")
@@ -15,7 +18,7 @@ public class AlbumREST {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Album> getAlbums() throws RepException {
+    public ArrayList<Album> getAlbums() throws RepException {
         try {
             return repo.getAlbumsList();
         } catch (Exception ex) {
@@ -26,11 +29,12 @@ public class AlbumREST {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{isrc}")
-    public Album getAlbum(@PathParam("isrc") String isrc) throws RepException {
+    public Album getAlbum(@PathParam("isrc") String isrc) throws RepException{
         Album al = repo.getAlbumInfo(isrc);
         if (al != null) {
             return al;
         } else {
+
             throw new RepException("Album does not exist.");
         }
     }
