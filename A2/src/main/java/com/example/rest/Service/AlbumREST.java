@@ -34,7 +34,6 @@ public class AlbumREST {
         if (al != null) {
             return al;
         } else {
-
             throw new RepException("Album does not exist.");
         }
     }
