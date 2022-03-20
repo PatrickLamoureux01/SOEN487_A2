@@ -37,7 +37,7 @@ public class AlbumsRepository implements AlbumsInterface {
     }
 
     @Override
-    public void updateAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio, int cover) throws SQLException {
+    public Integer updateAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio, int cover) throws SQLException {
 
         // Album Update
         try {
@@ -52,29 +52,30 @@ public class AlbumsRepository implements AlbumsInterface {
             update_album.setString(7, bio);
             update_album.setInt(8, cover);
             update_album.setString(9, isrc);
-            update_album.executeUpdate();
+            // Log Entry
+            log.addLogEntry(ChangeType.UPDATE,isrc);
+            return update_album.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // Log Entry
-        log.addLogEntry(ChangeType.UPDATE,isrc);
+        return null;
     }
 
     @Override
-    public void deleteAlbum(String isrc) throws SQLException {
+    public Integer deleteAlbum(String isrc) throws SQLException {
 
         // Album Deletion
         try {
             String delete_album_sql = "DELETE FROM albums WHERE isrc = ?";
             PreparedStatement del_album = conn.prepareStatement(delete_album_sql);
             del_album.setString(1, isrc);
-            del_album.executeUpdate();
+            // Log Entry
+            log.addLogEntry(ChangeType.DELETE,isrc);
+            return del_album.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // Log Entry
-        log.addLogEntry(ChangeType.DELETE,isrc);
-
+    return null;
     }
 
     @Override

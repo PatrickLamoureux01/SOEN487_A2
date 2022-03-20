@@ -7,6 +7,7 @@ import org.apache.http.HttpException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -51,25 +52,26 @@ public class AlbumREST {
 
     @PUT
     @Path("{isrc}/{title}/{desc}/{year}/{fname}/{lname}/{nick}/{bio}/{cover}")
-    public String modifyAlbum(@PathParam("isrc") String isrc, @PathParam("title") String title, @PathParam("desc") String desc, @PathParam("year") int year, @PathParam("fname") String fname, @PathParam("lname") String lname, @PathParam("nick") String nick, @PathParam("bio") String bio, @PathParam("cover") int cover) throws RepException {
-        try {
-            deleteAlbum(isrc);
-            createAlbum(isrc, title, desc, year, fname, lname, nick, bio, cover);
-            return "Album was modified successfully.";
-        } catch (Exception ex) {
-            throw new RepException("Album does not exist and/or was not able to be modified.");
-        }
+    public String modifyAlbum(@PathParam("isrc") String isrc, @PathParam("title") String title, @PathParam("desc") String desc, @PathParam("year") int year, @PathParam("fname") String fname, @PathParam("lname") String lname, @PathParam("nick") String nick, @PathParam("bio") String bio, @PathParam("cover") int cover) throws RepException, SQLException {
+
+            Integer rows = repo.updateAlbum(isrc, title, desc, year, fname, lname, nick, bio, cover);
+            if (rows == 0) {
+                throw new RepException("Album does not exist and/or was not able to be modified.");
+            } else {
+                return "Album was modified successfully.";
+            }
     }
 
 
     @DELETE
     @Path("{isrc}")
-    public String deleteAlbum(@PathParam("isrc") String isrc) throws RepException {
-        try {
-            repo.deleteAlbum(isrc);
-            return "Album was deleted successfully.";
-        } catch (Exception ex) {
-            throw new RepException("Album does not exist and/or was not able to be deleted.");
-        }
+    public String deleteAlbum(@PathParam("isrc") String isrc) throws RepException, SQLException {
+
+            Integer rows = repo.deleteAlbum(isrc);
+            if (rows == 0) {
+                throw new RepException("Album does not exist and/or was not able to be deleted.");
+            } else {
+                return "Album was deleted successfully.";
+            }
     }
 }

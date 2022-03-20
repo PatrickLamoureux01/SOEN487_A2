@@ -8,7 +8,7 @@ public class DBConnection {
 
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost:3306/";
+    static final String DB_URL = "jdbc:mysql://localhost:3308/";
     static final String DB_NAME = "a2";
     // Database credentials
     static final String DB_USER = "root";
