@@ -6,10 +6,11 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import java.io.IOException;
 
-import javax.xml.ws.Endpoint;
+//import javax.xml.ws.Endpoint;
+import jakarta.xml.ws.Endpoint;
 public class ServicePublisher {
     public static void main(String[] args) {
-        Endpoint.publish("http://localhost:8080/A2/LogInterface", new
+        Endpoint.publish("http://localhost:8086/A2/LogInterface", new
                 LogInterfaceImpl());
         System.out.println("Server is running");
     }

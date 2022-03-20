@@ -4,10 +4,12 @@ import com.example.rest.Core.LogEntry;
 import com.example.rest.Core.RepException;
 import org.glassfish.grizzly.http.util.TimeStamp;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+//import javax.jws.WebMethod;
+//import javax.jws.WebService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import jakarta.jws.WebService;
+import jakarta.jws.WebMethod;
 
 @WebService
 public interface LogInterface {

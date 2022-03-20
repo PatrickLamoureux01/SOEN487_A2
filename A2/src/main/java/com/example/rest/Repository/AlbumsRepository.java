@@ -2,10 +2,7 @@ package com.example.rest.Repository;
 
 import com.example.rest.Core.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class AlbumsRepository implements AlbumsInterface {
@@ -13,11 +10,11 @@ public class AlbumsRepository implements AlbumsInterface {
     Connection conn = DBConnection.getConnection();
     LogEntry log = new LogEntry();
 
-    public void addAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio, int cover) throws SQLException {
+    public void addAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio) throws SQLException {
 
         // Album Creation
         try {
-            String insert_album_sql = "INSERT INTO albums(isrc,title,description,releaseYear,artistF,artistL,artistNick,artistBio,coverId) VALUES(?,?,?,?,?,?,?,?,?)";
+            String insert_album_sql = "INSERT INTO albums(isrc,title,description,releaseYear,artistF,artistL,artistNick,artistBio) VALUES(?,?,?,?,?,?,?,?)";
             PreparedStatement insert_album = conn.prepareStatement(insert_album_sql);
             insert_album.setString(1, isrc);
             insert_album.setString(2, title);
@@ -27,7 +24,6 @@ public class AlbumsRepository implements AlbumsInterface {
             insert_album.setString(6, lName);
             insert_album.setString(7, nick);
             insert_album.setString(8, bio);
-            insert_album.setInt(9, cover);
             insert_album.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -37,11 +33,11 @@ public class AlbumsRepository implements AlbumsInterface {
     }
 
     @Override
-    public Integer updateAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio, int cover) throws SQLException {
+    public Integer updateAlbum(String isrc, String title, String description, int year, String fName, String lName, String nick, String bio) throws SQLException {
 
         // Album Update
         try {
-            String update_album_sql = "UPDATE albums SET title = ?, description = ?, releaseYear = ?, artistF = ?, artistL = ?, artistNick = ?, artistBio = ?, coverId = ? WHERE isrc = ?";
+            String update_album_sql = "UPDATE albums SET title = ?, description = ?, releaseYear = ?, artistF = ?, artistL = ?, artistNick = ?, artistBio = ? WHERE isrc = ?";
             PreparedStatement update_album = conn.prepareStatement(update_album_sql);
             update_album.setString(1, title);
             update_album.setString(2, description);
@@ -50,8 +46,7 @@ public class AlbumsRepository implements AlbumsInterface {
             update_album.setString(5, lName);
             update_album.setString(6, nick);
             update_album.setString(7, bio);
-            update_album.setInt(8, cover);
-            update_album.setString(9, isrc);
+            update_album.setString(8, isrc);
             // Log Entry
             log.addLogEntry(ChangeType.UPDATE,isrc);
             return update_album.executeUpdate();
@@ -139,12 +134,35 @@ public class AlbumsRepository implements AlbumsInterface {
             ex.printStackTrace();
         }
         return null;
-
     }
 
     @Override
-    public void updateAlbumCover() {
+    public Integer updateAlbumCover(String isrc, String name, String path, String type) {
 
+        // Insert into files
+        try {
+            String insert_file_sql = "INSERT INTO files(name,path,type) VALUES(?,?,?)";
+            PreparedStatement insert_file = conn.prepareStatement(insert_file_sql, Statement.RETURN_GENERATED_KEYS);
+            insert_file.setString(1, name);
+            insert_file.setString(2, path);
+            insert_file.setString(3, type);
+            insert_file.executeUpdate();
+            ResultSet rs = insert_file.getGeneratedKeys();
+            rs.next();
+
+            // Cover Update
+            String update_cover_sql = "UPDATE albums SET coverId = ? WHERE isrc = ?";
+            PreparedStatement update_album = conn.prepareStatement(update_cover_sql);
+            update_album.setInt(1, rs.getInt(1));
+            update_album.setString(2, isrc);
+            // Log Entry
+            log.addLogEntry(ChangeType.UPDATE,isrc);
+            return update_album.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return null;
     }
 
     @Override
@@ -163,8 +181,8 @@ public class AlbumsRepository implements AlbumsInterface {
     }
 
     @Override
-    public void clearLogs() {
-// nothing
+    public void clearLogs() throws RepException {
+        throw new RepException("The method is not yet supported.");
     }
 
 }

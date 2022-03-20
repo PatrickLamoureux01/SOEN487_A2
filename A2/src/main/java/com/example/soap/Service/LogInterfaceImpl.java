@@ -4,8 +4,8 @@ import com.example.rest.Core.ChangeType;
 import com.example.rest.Core.DBConnection;
 import com.example.rest.Core.LogEntry;
 import com.example.rest.Core.RepException;
-
-import javax.jws.WebService;
+import jakarta.jws.WebService;
+//import javax.jws.WebService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,8 +65,6 @@ public class LogInterfaceImpl implements LogInterface {
             if(!to_date.equals("?")){
                 select_stmt.setString(++index,to_date);
             }
-
-
 
             ResultSet rs = select_stmt.executeQuery();
 
