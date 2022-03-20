@@ -97,6 +97,11 @@
             <artifactId>jersey-media-json-jackson</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.example.rest</groupId>
+            <artifactId>soen487</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
