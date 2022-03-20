@@ -2,9 +2,11 @@ package com.example.rest.Core;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import static com.example.rest.Core.DBConnection.conn;
 
+@XmlRootElement
 public class LogEntry {
 
     private String timestamp;
