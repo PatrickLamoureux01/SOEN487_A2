@@ -13,8 +13,8 @@ public interface AlbumsInterface {
     List<Album> getAlbumsList();
 
     Integer updateAlbumCover(String isrc, String name, String path, String type);
-    void deleteAlbumCover();
-    void getAlbumCover();
+    Integer deleteAlbumCover(String isrc) throws SQLException;
+    String getAlbumCover(String isrc);
 
     void getChangeLogs(String from, String to, String type);
     void clearLogs() throws RepException;

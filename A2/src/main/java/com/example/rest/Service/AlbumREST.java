@@ -85,7 +85,7 @@ public class AlbumREST {
     }
 
     @POST
-    @Path("/upload/{isrc}")
+    @Path("/cover/{isrc}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public void uploadFile(@FormDataParam("file") BufferedImage image, @PathParam("isrc") String isrc) throws IOException {
 
@@ -105,6 +105,30 @@ public class AlbumREST {
         ImageIO.write(image, "jpg", new File(fileLocation+generatedString+".jpg"));
         if (image.getType() == 5) {
             repo.updateAlbumCover(isrc,generatedString, fileLocation, "image/jpeg");
+        }
+    }
+
+    @DELETE
+    @Path("/cover/{isrc}")
+    public String deleteCover(@PathParam("isrc") String isrc) throws RepException, SQLException {
+
+        Integer rows = repo.deleteAlbumCover(isrc);
+        if (rows == 0) {
+            throw new RepException("Album cover does not exist and/or was not able to be deleted.");
+        } else {
+            return "Album cover was deleted successfully.";
+        }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/cover/{isrc}")
+    public String getAlbumCover(@PathParam("isrc") String isrc) throws RepException{
+        String cover = repo.getAlbumCover(isrc);
+        if (cover != null) {
+            return cover;
+        } else {
+            throw new RepException("Album does not have a cover.");
         }
     }
 }

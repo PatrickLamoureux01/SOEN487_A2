@@ -161,18 +161,48 @@ public class AlbumsRepository implements AlbumsInterface {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
         return null;
     }
 
     @Override
-    public void deleteAlbumCover() {
+    public Integer deleteAlbumCover(String isrc) throws SQLException {
+
+        // Cover Update
+        String update_cover_sql = "UPDATE albums SET coverId = null WHERE isrc = ?";
+        PreparedStatement update_album = conn.prepareStatement(update_cover_sql);
+        update_album.setString(1, isrc);
+        // Log Entry
+        log.addLogEntry(ChangeType.UPDATE,isrc);
+        return update_album.executeUpdate();
 
     }
 
     @Override
-    public void getAlbumCover() {
+    public String getAlbumCover(String isrc) {
+        String path;
+        String name;
+        String fullpath;
+        try {
+            String select_cover_sql = "SELECT path,name FROM files WHERE fileId = (SELECT coverId FROM albums WHERE isrc = ?)";
+            PreparedStatement select_stmt2 = conn.prepareStatement(select_cover_sql);
+            select_stmt2.setString(1,isrc);
+            ResultSet rs3 = select_stmt2.executeQuery();
 
+            if (!rs3.next()) {
+                return null;
+            } else {
+                do {
+                    path = rs3.getString("path");
+                    name = rs3.getString("name");
+                    fullpath = path + name+".jpg";
+                } while (rs3.next());
+                return fullpath;
+            }
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     @Override
