@@ -1,5 +1,6 @@
 package com.example.rest;
 
+import com.example.rest.Core.CORSFilter;
 import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainer;
@@ -31,6 +32,8 @@ public class Main {
         // in com.example.rest package
         final ResourceConfig rc = new ResourceConfig().packages("com.example.rest");
         rc.register(MultiPartFeature.class);
+        rc.register(new CORSFilter());
+        rc.register(CORSFilter.class);
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
@@ -41,13 +44,7 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        /*
-        final ResourceConfig rc = new ResourceConfig().packages("com.example.rest");
-        final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
-        WebappContext context = new WebappContext("WebappContext", "");
-        ServletRegistration reg = context.addServlet("ServletContainer", ServletContainer.class);
-        reg.addMapping("/*");
-        context.deploy(server);*/
+
         final HttpServer server = startServer();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
